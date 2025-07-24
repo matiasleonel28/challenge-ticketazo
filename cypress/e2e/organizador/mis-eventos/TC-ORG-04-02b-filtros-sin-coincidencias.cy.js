@@ -10,8 +10,8 @@ describe('TC-ORG-04-02b - filtro-sin-coindencias' , () =>{
     // Validación estructural
     cy.get('[data-testid="event-card"]').should('have.length', 0);
 
-    // Mensaje de feedback si lo tiene implementado
-    // cy.contains('No se encontraron eventos').should('exist');
+    // Mensaje de feedback 
+    cy.contains('No se encontraron eventos').should('exist');
 
   })
 

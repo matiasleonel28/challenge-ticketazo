@@ -3,7 +3,7 @@ describe('TC-ORG-04-01 — Mis eventos - listado inicial', () => {
     cy.viewport(1280, 720); 
   });  
   it('Organizador visualiza sus eventos correctamente', () => {
-    // Comando custom que deberías tener en cypress/support/commands.js
+    
     cy.loginAsOrganizador();
 
     cy.visit('https://vps-3696213-x.dattaweb.com/');
