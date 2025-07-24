@@ -1,0 +1,24 @@
+{
+  "name": "challenge-ticketazo",
+  "version": "1.0.0",
+  "description": "Plan de pruebas: https://docs.google.com/spreadsheets/d/1wye7S7ehcoZNUsgV3WUlB9aZtGBYL97cfei12hk8Cl4/edit?hl=es&gid=0#gid=0\r Trello: https://trello.com/b/BptkvelK/ticketazo-grupo-6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matiasleonel28/challenge-ticketazo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/matiasleonel28/challenge-ticketazo/issues"
+  },
+  "homepage": "https://github.com/matiasleonel28/challenge-ticketazo#readme",
+  "devDependencies": {
+    "cypress": "^14.5.2"
+  }
+}
