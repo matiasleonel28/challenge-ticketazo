@@ -1,4 +1,4 @@
-describe('TC-ORG-04-02b - filtro-sin-coindencias' , () =>{
+describe('TC-ORG-04-02b - filtro-sin-coindencias muestra mensaje adecuado' , () =>{
     beforeEach(()=>{
         cy.viewport(1280, 720);
     });
