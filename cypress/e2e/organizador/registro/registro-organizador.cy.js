@@ -4,91 +4,104 @@ describe('Registro de Organizador', () => {
     cy.visit('https://vps-3696213-x.dattaweb.com/auth/registerClient');
   });
 
+  // generar datos unicos para evitar conflictos
+  const generarEmailUnico = () => `organizador${Date.now()}${Math.random().toString(36).substr(2, 5)}@test.com`;
+  const generarCuitUnico = () => `201${Date.now().toString().slice(-8)}`;
+
   const completarFormulario = (datos = {}) => {
     const datosDefault = {
       razonSocial: 'Organizador Prueba SRL',
-      cuit: '20300000009',
+      cuit: generarCuitUnico(),
       provincia: 'Buenos Aires',
       localidad: 'La Plata',
       direccion: 'Calle Falsa 123',
       telefono: '1155554444',
-      email: 'organizador.test@example.com',
-      confirmarEmail: 'organizador.test@example.com',
-      password: 'OrgPass1_', // 1 mayús, 8 caracteres, 1 símbolo, 1 número
+      email: generarEmailUnico(),
+      confirmarEmail: '', // se establece igual al email
+      password: 'OrgPass1_',
       repetirPassword: 'OrgPass1_',
       enviarFormulario: true
     };
 
-    // Combinar datos default con datos personalizados
     const datosFinal = { ...datosDefault, ...datos };
+    
+    // si no se especifica confirmarEmail, usar el mismo email
+    if (!datosFinal.confirmarEmail) {
+      datosFinal.confirmarEmail = datosFinal.email;
+    }
 
-    // Completar campos básicos
+    // campos basicos
     cy.get('[data-cy="input-razon-social"]').type(datosFinal.razonSocial);
     cy.get('[data-cy="input-cuit"]').type(datosFinal.cuit);
     cy.get('[data-cy="input-direccion"]').type(datosFinal.direccion);
     cy.get('[data-cy="input-telefono"]').type(datosFinal.telefono);
 
-    // Provincia y localidad
-    cy.get('[data-cy="select-provincia"]').type(datosFinal.provincia);
-    cy.get('[role="listbox"] [role="option"]').contains(datosFinal.provincia).click();
+    // ubicacion
+    seleccionarUbicacion(datosFinal.provincia, datosFinal.localidad);
 
-    cy.get('[data-cy="select-localidad"]').should('be.enabled');
-    cy.wait(1000);
-    cy.get('[data-cy="select-localidad"]').type(datosFinal.localidad);
-    cy.get('[role="listbox"] [role="option"]').contains(datosFinal.localidad).click();
-
-    // Email
+    // email y contrasena
     cy.get('[data-cy="input-email"]').type(datosFinal.email);
     cy.get('[data-cy="input-confirmar-email"]').type(datosFinal.confirmarEmail);
-
-    // Contraseña
     cy.get('[data-cy="input-password"]').type(datosFinal.password);
     cy.get('[data-cy="input-repetir-password"]').type(datosFinal.repetirPassword);
 
-    // Enviar formulario si está habilitado
     if (datosFinal.enviarFormulario) {
       cy.get('[data-cy="btn-registrarse"]').click();
     }
   };
 
+  // funciones helper reutilizables
+  const seleccionarUbicacion = (provincia, localidad) => {
+    cy.get('[data-cy="select-provincia"]').type(provincia);
+    cy.get('[role="listbox"] [role="option"]').contains(provincia).click();
+    cy.get('[data-cy="select-localidad"]').should('be.enabled');
+    cy.wait(1000);
+    cy.get('[data-cy="select-localidad"]').type(localidad);
+    cy.get('[role="listbox"] [role="option"]').contains(localidad).click();
+  };
+
+  const verificarErrorYRecargar = (selector, mensaje) => {
+    cy.get(selector).should('be.visible').and('contain.text', mensaje);
+    cy.url().should('include', '/registerClient');
+    cy.reload();
+  };
+
+  const probarCasosInvalidos = (casos, completarFormularioCb, verificarErrorCb) => {
+    casos.forEach((caso) => {
+      completarFormularioCb(caso);
+      cy.get('[data-cy="btn-registrarse"]').click();
+      if (!caso.esBug) {
+        verificarErrorCb(caso);
+      }
+      cy.url().should('include', '/registerClient');
+      cy.reload();
+    });
+  };
+
   describe('Tests Positivos', () => {
     it('[TC-REG-ORG-01] Verificar que el formulario puede ser enviado exitosamente con todos los campos requeridos llenos con datos válidos.', () => {
-      // Capturar alert usando cy.on
       cy.on('window:alert', (alertText) => {
-        expect(alertText).to.contains('Organizador registrado exitosamente. Su cuenta está pendiente de aprobación por el Administrador');
+        expect(alertText).to.contains('Cliente registrado con éxito, espera la validación del administrador');
       });
-
       completarFormulario();
     });
   });
 
   describe('Tests Negativos', () => {
     it('[TC-REG-ORG-02] Intentar enviar el formulario con uno o más campos requeridos vacíos y verificar que se muestran mensajes de error apropiados.', () => {
-      // Solo llenar algunos campos, dejando otros vacíos
+      const emailUnico = generarEmailUnico();
+      
       cy.get('[data-cy="input-telefono"]').type('1155554444');
       cy.get('[data-cy="input-direccion"]').type('Calle Falsa 123');
-
-      // Provincia y localidad
-      cy.get('[data-cy="select-provincia"]').type('Buenos Aires');
-      cy.get('[role="listbox"] [role="option"]').contains('Buenos Aires').click();
-      cy.wait(1000);
-      cy.get('[data-cy="select-localidad"]').type('La Plata');
-      cy.get('[role="listbox"] [role="option"]').contains('La Plata').click();
-
-      // Email y contraseña
-      cy.get('[data-cy="input-email"]').type('test@gmail.com');
-      cy.get('[data-cy="input-confirmar-email"]').type('test@gmail.com');
+      seleccionarUbicacion('Buenos Aires', 'La Plata');
+      cy.get('[data-cy="input-email"]').type(emailUnico);
+      cy.get('[data-cy="input-confirmar-email"]').type(emailUnico);
       cy.get('[data-cy="input-password"]').type('Password1_');
       cy.get('[data-cy="input-repetir-password"]').type('Password1_');
-
-      // Dejar Razón Social y CUIT vacíos
       cy.get('[data-cy="btn-registrarse"]').click();
 
-      // Verificar errores
-      cy.get('[data-slot="error-message"]')
-        .should('be.visible')
+      cy.get('[data-slot="error-message"]').should('be.visible')
         .and('contain.text', 'Completa este campo');
-
       cy.url().should('include', '/registerClient');
     });
 
@@ -96,57 +109,30 @@ describe('Registro de Organizador', () => {
       const emailsInvalidos = [
         { email: 'testorg.com', mensaje: 'Incluye un signo "@" en la dirección de correo electrónico' },
         { email: 'organizador@.co', mensaje: 'El signo "." está colocado en una posición incorrecta' },
-        { email: 'org@domain', esBug: true } // Bug: no muestra error
+        { email: 'org@domain', esBug: true }
       ];
 
-      emailsInvalidos.forEach((caso) => {
-        completarFormulario({
-          email: caso.email,
-          confirmarEmail: caso.email,
-          enviarFormulario: false
-        });
-
-        cy.get('[data-cy="btn-registrarse"]').click();
-
-        if (caso.esBug) {
-          cy.log(`BUG: "${caso.email}" debería mostrar error`);
-          cy.get('[data-slot="error-message"]').should('not.exist');
-        } else {
-          cy.get('[data-slot="error-message"]').should('be.visible')
-            .and('contain.text', caso.mensaje);
-        }
-
-        cy.url().should('include', '/registerClient');
-        cy.reload();
-      });
+      probarCasosInvalidos(
+        emailsInvalidos,
+        (caso) => completarFormulario({ 
+          email: caso.email, 
+          confirmarEmail: caso.email, 
+          enviarFormulario: false 
+        }),
+        (caso) => cy.get('[data-slot="error-message"]').should('be.visible').and('contain.text', caso.mensaje)
+      );
     });
 
     it('[TC-REG-ORG-04] Ingresar un CUIT que excede la longitud máxima (11 dígitos) y verificar que el sistema rechaza la entrada y muestra un mensaje de error.', () => {
-      completarFormulario({
-        cuit: '203000000091', // 12 dígitos
-        enviarFormulario: false
-      });
-
+      completarFormulario({ cuit: '203000000091', enviarFormulario: false });
       cy.get('[data-cy="btn-registrarse"]').click();
-
-      cy.get('[data-slot="error-message"]').should('be.visible')
-        .and('contain.text', 'El CUIT debe tener exactamente 11 dígitos');
-
-      cy.url().should('include', '/registerClient');
+      verificarErrorYRecargar('[data-slot="error-message"]', 'El CUIT debe tener exactamente 11 dígitos');
     });
 
     it('[TC-REG-ORG-05] Ingresar un número de teléfono con menos de 8 dígitos y verificar que se muestra un mensaje de error.', () => {
-      completarFormulario({
-        telefono: '1234567', // 7 dígitos
-        enviarFormulario: false
-      });
-
+      completarFormulario({ telefono: '1234567', enviarFormulario: false });
       cy.get('[data-cy="btn-registrarse"]').click();
-
-      cy.get('[data-slot="error-message"]').should('be.visible')
-        .and('contain.text', 'Utiliza un formato que coincida con el solicitado');
-
-      cy.url().should('include', '/registerClient');
+      verificarErrorYRecargar('[data-slot="error-message"]', 'Utiliza un formato que coincida con el solicitado');
     });
 
     it('[TC-REG-ORG-06] Intentar enviar el formulario con contraseñas que no coinciden en los campos "Contraseña" y "Repetir Contraseña".', () => {
@@ -155,86 +141,82 @@ describe('Registro de Organizador', () => {
         repetirPassword: 'PassOrg2_',
         enviarFormulario: false
       });
-
       cy.get('[data-cy="btn-registrarse"]').click();
-
       cy.get('[data-cy="error-message"]').should('be.visible')
         .and('contain.text', 'Las contraseñas no coinciden');
-
       cy.url().should('include', '/registerClient');
     });
 
     it('[TC-REG-ORG-07] Intentar registrarse con un email que ya existe en el sistema.', () => {
-  // Primer registro: crear organizador con email específico
-  completarFormulario({
-    email: 'organizador.existente@test.com',
-    confirmarEmail: 'organizador.existente@test.com'
-  });
+      // email especifico para este test
+      const emailDuplicado = generarEmailUnico();
+      
+      // primer registro con email especifico
+      completarFormulario({
+        email: emailDuplicado,
+        confirmarEmail: emailDuplicado
+      });
 
-  // Capturar el alert del primer registro
-  cy.on('window:alert', (alertText) => {
-    expect(alertText).to.contains('Cliente registrado con éxito, espera la validación del administrador');
-  });
+      cy.on('window:alert', (alertText) => {
+        expect(alertText).to.contains('Cliente registrado con éxito, espera la validación del administrador');
+      });
 
-  // Volver a la página de registro para el segundo intento
-  cy.visit('https://vps-3696213-x.dattaweb.com/auth/registerClient');
+      cy.visit('https://vps-3696213-x.dattaweb.com/auth/registerClient');
 
-  // Segundo registro: intentar con el MISMO email pero datos diferentes
-  completarFormulario({
-    razonSocial: 'Otra Empresa SRL',
-    cuit: '20987654321',
-    email: 'organizador.existente@test.com', // MISMO EMAIL
-    confirmarEmail: 'organizador.existente@test.com', // MISMO EMAIL
-    password: 'OtraPass1_',
-    repetirPassword: 'OtraPass1_',
-    enviarFormulario: false
-  });
+      // segundo registro: mismo email pero datos diferentes
+      completarFormulario({
+        razonSocial: 'Otra Empresa SRL',
+        cuit: generarCuitUnico(), // cuit diferente
+        email: emailDuplicado, // mismo email
+        confirmarEmail: emailDuplicado,
+        password: 'OtraPass1_',
+        repetirPassword: 'OtraPass1_',
+        enviarFormulario: false
+      });
 
-  cy.get('[data-cy="btn-registrarse"]').click();
+      cy.get('[data-cy="btn-registrarse"]').click();
+      cy.get('[data-cy="error-message"]').should('be.visible')
+        .and('contain.text', 'El usuario con este correo electrónico ya existe');
+      cy.url().should('include', '/registerClient');
+    });
 
-  // Verificar que aparece el mensaje de error de email duplicado
-  cy.get('[data-cy="error-message"]').should('be.visible')
-    .and('contain.text', 'El usuario con este correo electrónico ya existe');
+    it('[TC-REG-ORG-08] Intentar registrarse con un CUIT que ya existe en el sistema.', () => {
+      // datos especificos para este test
+      const cuitDuplicado = generarCuitUnico();
+      const email1 = generarEmailUnico();
+      const email2 = generarEmailUnico();
+      
+      // primer registro: crear organizador con cuit especifico
+      completarFormulario({
+        cuit: cuitDuplicado,
+        email: email1,
+        confirmarEmail: email1
+      });
 
-  // Verificar que el formulario NO se envió (permanece en registerClient)
-  cy.url().should('include', '/registerClient');
-});
+      cy.on('window:alert', (alertText) => {
+        expect(alertText).to.contains('Cliente registrado con éxito, espera la validación del administrador');
+      });
 
-it('[TC-REG-ORG-08] Intentar registrarse con un CUIT que ya existe en el sistema.', () => {
-  // Primer registro: crear organizador con CUIT específico
-  completarFormulario({
-    cuit: '20123456789',
-    email: 'organizador1@test.com',
-    confirmarEmail: 'organizador1@test.com'
-  });
+      cy.visit('https://vps-3696213-x.dattaweb.com/auth/registerClient');
 
-  // Capturar el alert del primer registro
-  cy.on('window:alert', (alertText) => {
-    expect(alertText).to.contains('Cliente registrado con éxito, espera la validación del administrador');
-  });
+      // segundo registro: mismo cuit pero email diferente
+      completarFormulario({
+        razonSocial: 'Otra Empresa SRL',
+        cuit: cuitDuplicado, // mismo cuit
+        email: email2, // diferente email
+        confirmarEmail: email2,
+        password: 'OtraPass1_',
+        repetirPassword: 'OtraPass1_',
+        enviarFormulario: false
+      });
 
-  // Volver a la página de registro para el segundo intento
-  cy.visit('https://vps-3696213-x.dattaweb.com/auth/registerClient');
+      cy.get('[data-cy="btn-registrarse"]').click();
 
-  // Segundo registro: intentar con el MISMO CUIT pero email diferente
-  completarFormulario({
-    razonSocial: 'Otra Empresa SRL',
-    cuit: '20123456789', // MISMO CUIT
-    email: 'organizador2@test.com', // DIFERENTE EMAIL
-    confirmarEmail: 'organizador2@test.com',
-    password: 'OtraPass1_',
-    repetirPassword: 'OtraPass1_',
-    enviarFormulario: false
-  });
+      // verificar el comportamiento actual del sistema
+      cy.get('[data-cy="error-message"]').should('be.visible')
+        .and('contain.text', 'Ya existe un organizador registrado con ese CUIT');
 
-  cy.get('[data-cy="btn-registrarse"]').click();
-
-  // BUG: El sistema valida email en lugar de CUIT duplicado
-  cy.get('[data-cy="error-message"]').should('be.visible')
-    .and('contain.text', 'El usuario con este correo electrónico ya existe');
-
-  // Verificar que el formulario NO se envió (permanece en registerClient)
-  cy.url().should('include', '/registerClient');
-});
+      cy.url().should('include', '/registerClient');
+    });
   });
 });
