@@ -107,9 +107,9 @@ describe('Registro de Comprador', () => {
   cy.url().should('include', '/registerUser');
 });
 
-    it('[TC-REG-COMP-04] Ingresar un formato de email inválido en los campos "Email" y/o "Confirmar Email" y verificar que el sistema rechaza la entrada y muestra un mensaje de error.', () => {
+it('[TC-REG-COMP-04] Ingresar un formato de email inválido en los campos "Email" y/o "Confirmar Email" y verificar que el sistema rechaza la entrada y muestra un mensaje de error.', () => {
   const emailsInvalidos = [
-    { email: 'asd.com', mensaje: 'Introduce texto detrás del signo "@"' },
+    { email: 'asd.com', mensaje: 'Incluye un signo "@" en la dirección de correo electrónico' },
     { email: 'hola@.com', mensaje: 'El signo "." está colocado en una posición incorrecta' },
     { email: 'asd@asd', esBug: true } // Bug: no muestra error
   ];
@@ -219,4 +219,4 @@ describe('Registro de Comprador', () => {
     .and('contain.text', 'Ya existe un usuario registrado con ese correo electrónico');
 });
   });
-});
+}); 
