@@ -122,7 +122,6 @@ git clone https://github.com/matiasleonel28/challenge-ticketazo.git
 cd challenge-ticketazo
 npm install
 npx cypress open       # modo interactivo
-npx cypress run        # modo headless
 ```
 
 ## Comandos personalizados
@@ -142,12 +141,3 @@ npx cypress run        # modo headless
 - Email: firduvufyi@necub.com  
 - Contraseña: Aa123456@
 
-## Checklist de entrega
-
-- [x] Tests E2E automatizados y estructurados
-- [x] Plan de pruebas documentado
-- [x] Bugs reportados con evidencia
-- [x] Repositorio ordenado y funcional
-- [x] Ejecución en navegadores requeridos
-- [x] Validación responsive (`cy.viewport`)
-- [x] Entorno QA disponible y operativo
