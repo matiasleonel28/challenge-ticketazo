@@ -10,8 +10,6 @@ describe('TC-ORG-04-03 — Acceder al detalle del evento desde Mis Eventos', () 
 
   it('Abre el panel lateral con la información del evento', () => {
     cy.contains('Ver evento').first().click();
-
-    // En lugar de verificar la URL, validás contenido del panel lateral
     cy.contains('MegaTest').should('exist'); // o "ModernEvent"
     cy.contains('span', 'Movistar Arena').should('exist');
     cy.contains('Adquirir entrada').should('exist');

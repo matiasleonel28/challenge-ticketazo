@@ -6,12 +6,8 @@ describe('TC-ORG-04-02b - filtro-sin-coindencias muestra mensaje adecuado' , () 
         cy.loginAsOrganizador();
         cy.visit('https://vps-3696213-x.dattaweb.com/');
         cy.get('input[aria-label="Search"]').type('eventoquenoexiste123');
-
-    // Validación estructural
-    cy.get('[data-testid="event-card"]').should('have.length', 0);
-
-    // Mensaje de feedback 
-    cy.contains('No se encontraron eventos').should('exist');
+        cy.get('[data-testid="event-card"]').should('have.length', 0);
+        cy.contains('No se encontraron eventos').should('exist');
 
   })
 

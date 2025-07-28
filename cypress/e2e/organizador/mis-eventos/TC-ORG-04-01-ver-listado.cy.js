@@ -12,10 +12,8 @@ describe('TC-ORG-04-01 — Mis eventos - listado inicial', () => {
   });
 
   it('Cada tarjeta tiene estructura funcional mínima', () => {
-    // Validar al menos una imagen de evento visible (fuera del within)
+    
     cy.get('img[alt="MegaTest"]').should('be.visible');
-
-    // Validar contenido textual y funcional dentro de la tarjeta
     cy.url().should('include', '/myEvents');
     cy.get('.grid > .text-foreground > .flex-auto').first().within(() => {
       cy.contains(/MegaTest|ModernEvent/).should('exist');       // Título

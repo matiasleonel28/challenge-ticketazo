@@ -9,14 +9,11 @@ describe('TC-ORG-04-04 — Acceder al perfil público del organizador y visualiz
    it('Accede desde el botón de compartir al perfil público del organizador y ve eventos activos', () => {
     cy.get('[data-cy="btn-compartir-perfil"]').click();
 
-    //cy.contains('Perfil copiado al portapapeles!').should('be.visible');
-
     cy.window().then((win) => {
       win.navigator.clipboard.readText().then((copiedPath) => {
         const fullUrl = 'https://vps-3696213-x.dattaweb.com' + copiedPath;
         cy.visit(fullUrl);
 
-    // Validaciones del perfil público
         cy.url().should('include', '/MegaEventos');
         cy.contains('ModernEvent').should('exist');
         cy.contains('Adquirí tu entrada').should('exist');
