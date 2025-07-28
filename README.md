@@ -1,177 +1,139 @@
-# Challenge — Ticketazo | Cypress E2E Automation
+Challenge — Ticketazo | Cypress E2E Automation
+Proyecto: Automatización de pruebas funcionales con Cypress
 
-Proyecto: Automatización de Pruebas Funcionales con Cypress
+Descripción general del proyecto
+Este documento establece la estrategia de automatización para el sistema Ticketazo. El objetivo es validar las funcionalidades centrales de los perfiles Comprador, Organizador y Administrador mediante pruebas automatizadas E2E con Cypress, garantizando la estabilidad funcional del sistema en sus flujos críticos.
 
-Automatización de pruebas del sistema Ticketazo, realizado por el equipo como parte del Challenge final. Se abordan flujos críticos de los perfiles Usuario, Organizador y Administrador, mediante pruebas E2E y buenas prácticas.
+Equipo
+Nombre	Rol asignado
+Matías Gómez	Organizador – Mis eventos, perfil público, Recuperar contraseña (Pantalla)
+Pablo Pena Heredia	Login y Registro
+[Nombre 3]	Administrador – Gestión de eventos
+[Nombre 4]	Usuario – Compra de entradas
 
-## Equipo
+Responsable de la entrega: [Completar]
 
-Matías Gómez — Organizador (Mis eventos, perfil público)
-
-Pablo Pena Heredia — Login y registro
-
-[Nombre 3] — Administrador (eventos)
-
-[Nombre 4] — Usuario (compra entradas)
-
-Responsable de la entrega: 
-
-# Enlaces importantes
-
+Enlaces de referencia
 Repositorio GitHub: https://github.com/matiasleonel28/challenge-ticketazo
 
-Plan de pruebas: https://app.clickup.com/90131537395/v/b/6-901317031051-2
+Plan de pruebas (ClickUp): https://app.clickup.com/90131537395/v/b/6-901317031051-2
 
-Tablero Trello: https://app.clickup.com/90131537395/v/l/li/901317032082?pr=90138845377
+Tablero de defectos: https://app.clickup.com/90131537395/v/l/li/901317032082?pr=90138845377
 
 Entorno QA utilizado: https://vps-3696213-x.dattaweb.com
 
-1. Introducción
+Alcance
+Incluido:
 
-Este documento establece la estrategia y el enfoque para la automatización de pruebas del proyecto Ticketazo. El objetivo es validar de forma sistemática las funcionalidades clave de la plataforma, asegurando la calidad de los flujos críticos para Compradores y Organizadores mediante Cypress + JavaScript.
+Pruebas E2E automatizadas de interfaz
 
-2. Alcance del Proyecto
+Validación completa de flujo del Comprador
 
-Dentro del Alcance:
+Validación completa de flujo del Organizador
 
-Automatización UI de flujos funcionales.
+Pruebas responsivas con cy.viewport()
 
-Validación de flujo completo del Comprador.
+Ejecución cross-browser (Chrome, Firefox, Edge)
 
-Validación de flujo completo del Organizador.
+Excluido:
 
-Pruebas responsivas con cy.viewport().
+Pruebas directas a API (solo vía interfaz)
 
-Ejecución en navegadores: Chrome, Firefox y Edge.
+Pruebas de rendimiento o carga
 
-Fuera del Alcance:
+Validaciones en base de datos
 
-Pruebas API directas (solo a través de la UI).
+Funcionalidades cubiertas
+Comunes:
 
-Pruebas de carga o rendimiento.
+Cambio de tema claro/oscuro y su persistencia
 
-Validación en base de datos.
+Comprador:
 
-3. Funcionalidades cubiertas (por rol)
+Navegación sin login y visualización de eventos públicos
 
-Funcionalidades comunes
+Filtros por título, fecha, categoría, cercanía
 
-Cambio y persistencia de tema (claro/oscuro).
+Registro y login con validaciones
 
-Comprador
+Compra de entradas (asientos, medios de pago, QR, entradas gratuitas)
 
-Visualización de eventos públicos sin login.
+Visualización de entradas adquiridas
 
-Filtros: título, fecha, categoría, cercanía, etc.
+Logout
 
-Registro, login (validaciones y errores).
+Organizador:
 
-Compra: asientos, medios de pago, QR, "Entrada Gratis".
+Registro con campos obligatorios
 
-Visualización y gestión de entradas.
+Creación y edición de eventos
 
-Logout funcional.
+Edición de perfil y redes sociales
 
-Organizador
+Gestión de usuarios autorizados
 
-Registro con campos obligatorios.
+Vista y gestión de la sección "Mis eventos"
 
-Creación de eventos con todos los pasos.
+Vista pública del perfil con eventos activos
 
-Edición de perfil y redes.
+Administrador:
 
-Gestión de usuarios autorizados y permisos.
+Gestión de eventos (parcial, en progreso)
 
-Sección "Mis Eventos": listado, búsqueda, botón compartir.
-
-Vista pública del perfil y eventos activos.
-
-4. Estrategia de Pruebas
-
+Estrategia de pruebas
 Framework: Cypress
 
 Lenguaje: JavaScript
 
-Técnicas: Partición de equivalencia, valores límite, error guessing.
+Técnicas: partición de clases, valores límite, error guessing
 
-Tipos:
+Tipos de prueba:
 
-Pruebas funcionales automatizadas
+Funcionales E2E
 
-Pruebas de regresión (con smoke test)
+Regresión (smoke)
 
 Cross-browser
 
 Responsivas con cy.viewport()
 
-Exploratorias manuales (no automatizables)
+Exploratorias (manuales)
 
-5. Criterios de Aceptación
+Criterios de aceptación
+Todos los tests automatizados deben ejecutarse sin errores
 
-100% de los tests automatizados deben pasar.
+Los flujos críticos deben completarse sin fallas
 
-Flujos de compra y creación de eventos sin errores críticos.
+Todos los defectos críticos y altos deben estar reportados
 
-Todos los defectos Críticos o Altos reportados.
+Severidades
+Severidad	Descripción	Acción esperada
+Crítica	Interrumpe el flujo principal	Corrección inmediata
+Alta	Falla funcional relevante	Corrección prioritaria
+Media	Afecta experiencia sin bloquear	Corrección en próxima iteración
+Baja	Estética, textos o detalles menores	Corrección opcional
 
-Clasificación de Severidad
+Reporte de defectos
+Herramienta: ClickUp (uso interno)
 
-Severidad
+Cada defecto contiene:
 
-Descripción
+ID y título
 
-Acción
+Test case relacionado
 
-Crítica
+Precondiciones y pasos
 
-Falla que impide el uso del flujo
+Resultado esperado vs actual
 
-Corrección inmediata
+Navegador y resolución
 
-Alta
+Evidencia (screenshot o video de Cypress)
 
-Falla funcional sin bloqueo total
-
-Corrección prioritaria
-
-Media
-
-Falla que afecta experiencia
-
-Corrección en siguiente iteración
-
-Baja
-
-Visual, texto, inconsistencias menores
-
-Corrección opcional
-
-6. Reporte de Defectos
-
-Herramienta: Trello (o ClickUp en gestión interna)
-
-Cada tarjeta contiene:
-
-ID Defecto
-
-TC relacionado
-
-Título
-
-Precondiciones
-
-Pasos detallados
-
-Resultado esperado / actual
-
-Ambiente (navegador, resolución)
-
-Evidencia (video o screenshot Cypress)
-
-7. Cypress - Estructura y Ejecución
-
-Estructura de carpetas
-
+Estructura del proyecto (Cypress)
+pgsql
+Copiar
+Editar
 cypress/
 ├── e2e/
 │   ├── login/
@@ -180,7 +142,6 @@ cypress/
 │   │   └── mis-eventos/
 │   │       ├── TC-ORG-04-01-ver-listado.cy.js
 │   │       ├── TC-ORG-04-02-filtrar-eventos.cy.js
-│   │       └── ...
 │   └── admin/
 ├── support/
 │   └── commands.js
@@ -189,25 +150,24 @@ cypress/
 .gitignore
 package.json
 README.md
-
-## Instalación y ejecución
-
-git clone https://github.com/usuario/challenge-ticketazo.git
+Instalación y ejecución
+bash
+Copiar
+Editar
+git clone https://github.com/matiasleonel28/challenge-ticketazo.git
 cd challenge-ticketazo
 npm install
-npx cypress open # o npx cypress run
-
-Comandos custom
-
+npx cypress open       # para modo interactivo
+npx cypress run        # para modo headless
+Comandos personalizados
 cy.loginAsOrganizador()
 
-cy.viewport(1280,720)
+cy.viewport(1280, 720)
 
-Uso de data-cy para selectores estables
+Selectores personalizados mediante data-cy para mayor estabilidad
 
-8. Datos de prueba
-
-Organizador:
+Datos de prueba
+Organizador con eventos:
 
 Email: 3ypsmhh8c5@zudpck.com
 
@@ -221,11 +181,5 @@ Email: firduvufyi@necub.com
 
 Contraseña: Aa123456@
 
-9. Validación de Entorno
 
-QA: https://vps-3696213-x.dattaweb.com (usado por defecto)
-
-Producción: https://ticketazo.com.ar (misma data)
-
-10. Checklist de entrega
 
