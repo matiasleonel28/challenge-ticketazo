@@ -1,19 +1,19 @@
 # Challenge — Ticketazo | Cypress E2E Automation
 
-## Descripción general del proyecto
+## Objetivo
 
-Este repositorio contiene la automatización de pruebas funcionales de la plataforma Ticketazo, utilizando Cypress y JavaScript. Se cubren flujos críticos de los perfiles Usuario, Organizador y Administrador mediante pruebas E2E estructuradas.
+Automatizar casos funcionales críticos de la plataforma Ticketazo utilizando Cypress, aplicando buenas prácticas de testing E2E, manejo de datos de prueba, uso de fixtures y reporte de defectos.
 
 ## Equipo
 
-| Nombre                | Rol asignado                             |
-|-----------------------|-------------------------------------------|
-| Matías Gómez          | Organizador – Mis eventos, perfil público |
-| Pablo Pena Heredia    | Login y Registro                          |
-| [Nombre 3]            | Administrador – Gestión de eventos        |
-| [Nombre 4]            | Usuario – Compra de entradas              |
+| Nombre                | Rol asignado                                             |
+|-----------------------|----------------------------------------------------------|
+| Matías Gómez          | Organizador – Mis eventos, perfil público                |
+| Pablo Pena Heredia    | Login y Registro                                         |
+| Anghela Anzaldo       | Organizador - Editar perfil                              |
+| Antonella Masini      | Usuario – Compra de entradas, filtrado de eventos, logout|
 
-Responsable de la entrega: [Completar]
+Responsable de la entrega: Matías Gómez
 
 ## Enlaces de referencia
 
@@ -28,8 +28,7 @@ Responsable de la entrega: [Completar]
 - Pruebas E2E automatizadas desde la UI
 - Validación completa de flujo del Comprador
 - Validación completa de flujo del Organizador
-- Pruebas responsivas (`cy.viewport`)
-- Ejecución en Chrome, Firefox y Edge
+- Ejecución en Chrome.
 
 ### Excluido
 - Pruebas directas a API (solo interfaz)
@@ -50,7 +49,7 @@ Responsable de la entrega: [Completar]
 - Logout
 
 ### Organizador
-- Registro con campos obligatorios
+- Registro con validaciones
 - Creación de eventos
 - Edición de perfil/redes
 - Gestión de usuarios autorizados
@@ -59,6 +58,11 @@ Responsable de la entrega: [Completar]
 
 ### Administrador
 - Gestión de eventos (parcial)
+
+### Recuperación de Contraseña
+- Flujo completo de recuperación
+- Validaciones de campos
+- Redirecciones correctas
 
 ## Estrategia de pruebas
 
@@ -90,7 +94,6 @@ Responsable de la entrega: [Completar]
   - Test case relacionado
   - Precondiciones y pasos
   - Resultado esperado / actual
-  - Ambiente (navegador, resolución)
   - Evidencia (screenshot o video de Cypress)
 
 ## Estructura del proyecto
@@ -104,7 +107,7 @@ cypress/
 │   ├── recuperar-contraseña/
 │   └── usuario/
 ├── fixtures/
-│   └── users.json
+│   └── authData.json
 ├── screenshots/
 ├── support/
 │   └── commands.js
@@ -124,7 +127,7 @@ npm install
 npx cypress open       # modo interactivo
 ```
 
-## Comandos personalizados
+## Comandos custom
 
 - `cy.loginAsOrganizador()`
 - `cy.viewport(1280, 720)`
