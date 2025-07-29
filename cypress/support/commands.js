@@ -33,7 +33,3 @@ Cypress.Commands.add('loginAsOrganizador', () => {
   //cy.url().should('include', '/organizador/mis-eventos');
 });
 
-
-
-
-

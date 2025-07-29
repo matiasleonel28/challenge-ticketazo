@@ -13,4 +13,5 @@ describe ('[TC-COM-FE-01.1] Aplicación de fecha anterior del día de la fecha '
       .should('be.visible')
       .and('contain.text', 'El valor debe ser 29/7/2025 o posterior.')
   })
+
 })
