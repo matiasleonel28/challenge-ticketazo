@@ -6,12 +6,12 @@ Automatizar casos funcionales críticos de la plataforma Ticketazo utilizando Cy
 
 ## Equipo
 
-| Nombre                | Rol asignado                                             |
-|-----------------------|----------------------------------------------------------|
-| Matías Gómez          | Organizador – Mis eventos, perfil público                |
-| Pablo Pena Heredia    | Login y Registro                                         |
-| Anghela Anzaldo       | Organizador - Editar perfil                              |
-| Antonella Masini      | Usuario – Compra de entradas, filtrado de eventos, logout|
+| Nombre                | Rol asignado                                                           |
+|-----------------------|------------------------------------------------------------------------|
+| Matías Gómez          | Organizador – Mis eventos, perfil público.Recuperar contraseña (página)|
+| Pablo Pena Heredia    | Login y Registro                                                       |
+| Anghela Anzaldo       | Organizador - Editar perfil                                            |
+| Antonella Masini      | Usuario – Compra de entradas, filtrado de eventos, logout              |
 
 Responsable de la entrega: Matías Gómez
 
