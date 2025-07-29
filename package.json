@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/matiasleonel28/challenge-ticketazo#readme",
   "devDependencies": {
-    "cypress": "^14.5.2"
+    "cypress": "^14.5.2",
+    "cypress-file-upload": "^5.0.8"
   }
 }

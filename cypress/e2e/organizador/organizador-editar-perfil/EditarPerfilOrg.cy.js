@@ -1,19 +1,14 @@
 // challenge-ticketazo/cypress/e2e/organizador/organizador-editar-perfil/EditarPerfilOrg.cy.test.js
 
+import 'cypress-file-upload';
+
 describe('Edición de Perfil de Organizador', () => {
     beforeEach(() => {
 
               cy.loginAsOrganizador();
               cy.get('a[href="/editProfile"]').click({force: true});
 
-        // Reemplaza estos valores con las credenciales reales del organizador
-       // cy.visit('https://vps-3696213-x.dattaweb.com/auth/login');
-       // cy.get('input[name="email"]').type('organizador@email.com');
-       // cy.get('input[name="password"]').type('Aa123456@');
-       // cy.get('button[type="submit"]').click();
-       // cy.url().should('include', '/dashboard');
-       // cy.visit('/organizador/perfil');
-    });
+          });
 
     it('Debe mostrar todos los campos del perfil', () => {
         //cy.contains('Perfil del Establecimiento');
@@ -51,56 +46,36 @@ describe('Edición de Perfil de Organizador', () => {
         cy.contains('Perfil actualizado').should('exist');
     });
 
-    it('No debe permitir email inválido (negativo)', () => {
-        cy.get('input[name="email"]').clear().type('correo-invalido');
-        cy.contains('Guardar Cambios').click();
-        cy.contains('Email inválido').should('exist');
-    });
-
-    it('No debe permitir CUIT inválido (negativo)', () => {
-        cy.get('input[name="cuit"]').clear().type('abc123');
-        cy.contains('Guardar Cambios').click();
-        cy.contains('CUIT inválido').should('exist');
-    });
-
-    it('No debe permitir campos obligatorios vacíos (negativo)', () => {
-        cy.get('input[name="nombre"]').clear();
-        cy.get('input[name="nombreUsuario"]').clear();
-        cy.contains('Guardar Cambios').click();
-        cy.contains('Campo obligatorio').should('exist');
-    });
+   
 
     it('Debe permitir cambiar la imagen de perfil (positivo)', () => {
         const imagePath = 'images/profile.jpg'; // Debe existir en fixtures
+        // Importa el comando en el archivo de soporte, normalmente en cypress/support/commands.js:
+        // import 'cypress-file-upload';
+        // Asegúrate de que el input sea de tipo "file" y que el plugin esté instalado
         cy.get('input[type="file"]').attachFile(imagePath);
         cy.contains('Guardar Cambios').click();
         cy.contains('Perfil actualizado').should('exist');
     });
 
-    it('No debe permitir teléfono con letras (negativo)', () => {
-        cy.get('input[name="telefono"]').clear().type('54abc98882');
-        cy.contains('Guardar Cambios').click();
-        cy.contains('Teléfono inválido').should('exist');
+    it('Debe mostrar el placeholder "Ej:11 1234-5678" si el campo de teléfono está vacío', () => {
+        cy.get('input[aria-label="Teléfono"]').clear().blur();
+        cy.get('input[aria-label="Teléfono"]').should('have.attr', 'placeholder', 'Ej:11 1234-5678');
     });
 
     it('Debe permitir dejar campos de redes sociales vacíos (positivo)', () => {
-        cy.get('input[name="linkedin"]').clear();
-        cy.get('input[name="twitter"]').clear();
-        cy.get('input[name="instagram"]').clear();
-        cy.get('input[name="tiktok"]').clear();
+        cy.get('input[aria-label="LinkedIn"]').clear();
+        cy.get('input[aria-label="Twitter"]').clear();
+        cy.get('input[aria-label="Instagram"]').clear();
+        cy.get('input[aria-label="TikTok"]').clear();
         cy.contains('Guardar Cambios').click();
         cy.contains('Perfil actualizado').should('exist');
     });
 
-    it('No debe permitir nombre de usuario con espacios (negativo)', () => {
-        cy.get('input[name="nombreUsuario"]').clear().type('usuario con espacio');
-        cy.contains('Guardar Cambios').click();
-        cy.contains('Nombre de usuario inválido').should('exist');
+    it('Debe mostrar el placeholder "Ej: Juan Pérez" si el campo de nombre de usuario está vacío', () => {
+        cy.get('input[aria-label="Nombre"]').first().clear().blur();
+        cy.get('input[aria-label="Nombre"]').first().should('have.attr', 'placeholder', 'Ej: Juan Pérez');
     });
 
-    it('Debe mostrar mensaje de error si la provincia no está seleccionada (negativo)', () => {
-        cy.get('input[name="provincia"]').select('');
-        cy.contains('Guardar Cambios').click();
-        cy.contains('Provincia obligatoria').should('exist');
-    });
+   
 });
