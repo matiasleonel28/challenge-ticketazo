@@ -25,22 +25,24 @@ describe('Mis Eventos - Organizador', () => {
       cy.loginAsOrganizador();
       cy.visit('https://vps-3696213-x.dattaweb.com/');
       cy.contains('Mis Eventos').click();
+      cy.wait(1000); // Espera a que se carguen los eventos
       cy.contains('Ver evento').first().click();
       cy.contains('MegaTest').should('exist'); // o "ModernEvent"
-        cy.contains('span', 'Movistar Arena').should('exist');
-        cy.contains('Adquirir entrada').should('exist');
-        cy.get('.shadow-lg > :nth-child(2) > :nth-child(2) > span').should('exist');
+      cy.contains('span', 'Movistar Arena').should('exist');
+      cy.contains('Adquirir entrada').should('exist');
+      cy.get('.shadow-lg > :nth-child(2) > :nth-child(2) > span').should('exist');
     });
 
     it('[TC-ORG-04-04] Desde el botón de compartir se accede al perfil público con eventos', () => {
       cy.loginAsOrganizador();
       cy.visit('https://vps-3696213-x.dattaweb.com/');
       cy.contains('Mis Eventos').click();
+      cy.wait(1000); // Espera a que se carguen los eventos
       cy.get('[data-cy="btn-compartir-perfil"]').click();
 
       cy.window().then((win) => {
         win.navigator.clipboard.readText().then((copiedPath) => {
-          const fullUrl = 'https://vps-3696213-x.dattaweb.com' + copiedPath;
+          const fullUrl = copiedPath;
           cy.visit(fullUrl);
           cy.url().should('include', '/MegaEventos');
           cy.contains('ModernEvent').should('exist');
